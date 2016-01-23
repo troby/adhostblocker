@@ -15,5 +15,7 @@ except:
 
 if not os.path.isfile(output):
   fh = open(output, 'w')
-  fh.write(blacklist.text)
+  for line in blacklist.text.split('\n'):
+    if re.match(r'^127.0.0.1', line):
+      fh.write(line + '\n')
   fh.close()
