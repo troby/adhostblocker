@@ -9,10 +9,8 @@ try:
   blacklist = requests.get(url)
 
   if blacklist.status_code != 200:
-    print 'response %d' % blacklist.status_code
     sys.exit(0)
 except:
-  print 'request failed'
   sys.exit(0)
 
 if not os.path.isfile(output):
