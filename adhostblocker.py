@@ -27,10 +27,38 @@ def save_hosts(bad_hosts):
   for host in bad_hosts:
     os.write(fd, host + '\n')
   os.close(fd)
+  return filename
+
+def write_to_etc_hosts(host_list):
+  etc_hosts = open('/etc/hosts', 'a')
+  bad_hosts = open(host_list, 'r')
+  data = bad_hosts.read()
+  bad_hosts.close()
+  etc_hosts.write('# adhostblocker\n' + data)
+  etc_hosts.close()
+
+def reset_etc_hosts():
+  etc_hosts = open('/etc/hosts', 'r')
+  data = etc_hosts.read().split('\n')
+  etc_hosts.close()
+  modified = 0
+  for line in data:
+    if re.match('^# adhostblocker$', line):
+      modified = 1
+      break
+  if modified:
+    keep = data[:data.index('# adhostblocker')]
+    # we want to overwrite the file
+    etc_hosts = open('/etc/hosts', 'w')
+    for line in keep:
+      etc_hosts.write(line + '\n')
+    etc_hosts.close()
 
 def main():
   bad = get_blacklist()
-  save_hosts(bad)
+  host_list = save_hosts(bad)
+  reset_etc_hosts()
+  write_to_etc_hosts(host_list)
 
 if __name__ == '__main__':
   main()
