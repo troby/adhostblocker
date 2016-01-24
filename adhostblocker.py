@@ -3,6 +3,7 @@ import re, requests, sys, os, tempfile
 
 # bad hosts taken from someonewhocares.org
 url = 'http://someonewhocares.org/hosts/'
+lf = os.linesep
 
 def get_blacklist():
   # quietly die if request cannot be made
@@ -15,7 +16,7 @@ def get_blacklist():
     sys.exit(0)
 
   bad_hosts = []
-  for line in blacklist.text.split('\n'):
+  for line in blacklist.text.split(lf):
     if re.match(r'^127.0.0.1', line):
       bad_hosts.append(line)
   if len(bad_hosts) == 0:
@@ -25,7 +26,7 @@ def get_blacklist():
 def save_hosts(bad_hosts):
   (fd, filename) = tempfile.mkstemp(prefix='hosts-', dir=os.path.abspath('.'))
   for host in bad_hosts:
-    os.write(fd, host + '\n')
+    os.write(fd, host + lf)
   os.close(fd)
   return filename
 
@@ -39,7 +40,7 @@ def write_to_etc_hosts(host_list):
 
 def reset_etc_hosts():
   etc_hosts = open('/etc/hosts', 'r')
-  data = etc_hosts.read().split('\n')
+  data = etc_hosts.read().split(lf)
   etc_hosts.close()
   modified = 0
   for line in data:
@@ -51,7 +52,7 @@ def reset_etc_hosts():
     # we want to overwrite the file
     etc_hosts = open('/etc/hosts', 'w')
     for line in keep:
-      etc_hosts.write(line + '\n')
+      etc_hosts.write(line + lf)
     etc_hosts.close()
 
 def main():
