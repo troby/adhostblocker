@@ -2,7 +2,7 @@
 import re, requests, sys, os, tempfile
 
 # bad hosts taken from someonewhocares.org
-url = 'http://someonewhocares.org/hosts/'
+url = 'http://someonewhocares.org/hosts/hosts'
 lf = os.linesep
 
 def get_blacklist():
