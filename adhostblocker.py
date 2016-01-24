@@ -1,7 +1,12 @@
 #!/usr/bin/env python2.7
 import re, requests, sys, os, tempfile
 
-# bad hosts taken from someonewhocares.org
+'''
+bad hosts taken from someonewhocares.org
+maintained by Dan Pollock
+hosts@someonewhocares.org
+'''
+
 url = 'http://someonewhocares.org/hosts/hosts'
 lf = os.linesep
 
