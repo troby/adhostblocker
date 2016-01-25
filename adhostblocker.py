@@ -20,27 +20,24 @@ def get_blacklist():
   except:
     sys.exit(0)
 
+  return blacklist.text
+
+def parse_hosts(blacklist):
   bad_hosts = []
-  for line in blacklist.text.split(lf):
+  for line in blacklist.split(lf):
     if re.match(r'^127.0.0.1', line):
       bad_hosts.append(line)
+
   if len(bad_hosts) == 0:
     sys.exit(0)
-  return bad_hosts
+  else:
+    return bad_hosts
 
-def save_hosts(bad_hosts):
-  (fd, filename) = tempfile.mkstemp(prefix='hosts-', dir=os.path.abspath('.'))
-  for host in bad_hosts:
-    os.write(fd, host + lf)
-  os.close(fd)
-  return filename
-
-def write_to_etc_hosts(host_list):
+def write_to_etc_hosts(bad_hosts):
   etc_hosts = open('/etc/hosts', 'a')
-  bad_hosts = open(host_list, 'r')
-  data = bad_hosts.read()
-  bad_hosts.close()
-  etc_hosts.write('# adhostblocker\n' + data)
+  etc_hosts.write('# adhostblocker' + lf)
+  for host in bad_hosts:
+    etc_hosts.write(host + lf)
   etc_hosts.close()
 
 def reset_etc_hosts():
@@ -61,10 +58,10 @@ def reset_etc_hosts():
     etc_hosts.close()
 
 def main():
-  bad = get_blacklist()
-  host_list = save_hosts(bad)
+  rawlist = get_blacklist()
+  bad_hosts = parse_hosts(rawlist)
   reset_etc_hosts()
-  write_to_etc_hosts(host_list)
+  write_to_etc_hosts(bad_hosts)
 
 if __name__ == '__main__':
   main()
