@@ -8,6 +8,7 @@ hosts@someonewhocares.org
 '''
 
 url = 'http://someonewhocares.org/hosts/hosts'
+system_hosts = '/etc/hosts'
 lf = os.linesep
 
 def get_blacklist():
@@ -41,7 +42,7 @@ def parse_hosts(blacklist):
     return bad_hosts
 
 def hosts_updated(new_date):
-  fh = open('/etc/hosts', 'r')
+  fh = open(system_hosts, 'r')
   for line in fh.read().split(lf):
     if re.match(r'^# Last updated', line):
       if line == new_date:
@@ -54,14 +55,14 @@ def hosts_updated(new_date):
     return True
 
 def write_to_etc_hosts(bad_hosts):
-  etc_hosts = open('/etc/hosts', 'a')
+  etc_hosts = open(system_hosts, 'a')
   etc_hosts.write('# adhostblocker' + lf)
   for line in bad_hosts:
     etc_hosts.write(line + lf)
   etc_hosts.close()
 
 def reset_etc_hosts():
-  etc_hosts = open('/etc/hosts', 'r')
+  etc_hosts = open(system_hosts, 'r')
   data = etc_hosts.read().split(lf)
   etc_hosts.close()
   modified = 0
@@ -72,7 +73,7 @@ def reset_etc_hosts():
   if modified:
     keep = data[:data.index('# adhostblocker')]
     # we want to overwrite the file
-    etc_hosts = open('/etc/hosts', 'w')
+    etc_hosts = open(system_hosts, 'w')
     for line in keep:
       etc_hosts.write(line + lf)
     etc_hosts.close()
