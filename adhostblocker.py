@@ -25,6 +25,9 @@ def get_blacklist():
 def parse_hosts(blacklist):
   bad_hosts = []
   for line in blacklist.split(lf):
+    if re.match(r'^# Last updated', line):
+      bad_hosts.insert(0, line)
+      continue
     if re.match(r'^127.0.0.1', line):
       bad_hosts.append(line)
 
@@ -36,8 +39,8 @@ def parse_hosts(blacklist):
 def write_to_etc_hosts(bad_hosts):
   etc_hosts = open('/etc/hosts', 'a')
   etc_hosts.write('# adhostblocker' + lf)
-  for host in bad_hosts:
-    etc_hosts.write(host + lf)
+  for line in bad_hosts:
+    etc_hosts.write(line + lf)
   etc_hosts.close()
 
 def reset_etc_hosts():
