@@ -26,8 +26,12 @@ def parse_hosts(blacklist):
   bad_hosts = []
   for line in blacklist.split(lf):
     if re.match(r'^# Last updated', line):
-      bad_hosts.insert(0, line)
-      continue
+      # check if this is the same version we have
+      if hosts_updated(line) is True:
+        bad_hosts.insert(0, line)
+        continue
+      else:
+        sys.exit(0)
     if re.match(r'^127.0.0.1', line):
       bad_hosts.append(line)
 
@@ -35,6 +39,19 @@ def parse_hosts(blacklist):
     sys.exit(0)
   else:
     return bad_hosts
+
+def hosts_updated(new_date):
+  fh = open('/etc/hosts', 'r')
+  for line in fh.read().split(lf):
+    if re.match(r'^# Last updated', line):
+      if line == new_date:
+        fh.close()
+        return False
+      else:
+        fh.close()
+        return True
+    # return True if line not found
+    return True
 
 def write_to_etc_hosts(bad_hosts):
   etc_hosts = open('/etc/hosts', 'a')
