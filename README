@@ -1,3 +1,9 @@
+*** AUTOMATION REQUEST ***
+If automating invocation of this script. please do not run with a frequency
+greater than once per day. It would be ideal to run about once per week.
+This is a direct request from hosts@someonewhocares.org. Thank you!
+*** AUTOMATION REQUEST ***
+
 This script is designed to append the existing system hosts file with a list of bad
 hosts to be redirected to localhost. This list is taken from someonewhocares.org
 and maintained by Dan Pollock. You may contact hosts@someonewhocares.org for updates
@@ -8,5 +14,6 @@ your system. You must run this script under a user who has permissions to write 
 the system_hosts file.
 
 This script is designed to be run on a regular interval with minimal overhead and a
-silent death if there is no working internet connection.
+silent death if there is no working internet connection. The latest version uses
+HEAD to determine if there has been an update.
 
